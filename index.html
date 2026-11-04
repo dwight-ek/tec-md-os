@@ -6,79 +6,91 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="theme-color" content="#0f172a">
-<title>TEC MD OS</title>
+<title>Music Director</title>
 <style>
 * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-html, body { margin: 0; padding: 0; height: 100%; }
-body { 
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif; 
-  background: #f1f5f9; 
-  color: #0f172a; 
-  padding-bottom: calc(70px + env(safe-area-inset-bottom));
+html, body { margin: 0; padding: 0; height: 100%; background: #f1f5f9; }
+body {
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  color: #0f172a;
   padding-top: env(safe-area-inset-top);
+  padding-bottom: calc(64px + env(safe-area-inset-bottom));
 }
-.header { 
-  background: #0f172a; 
-  color: white; 
-  padding: 12px 16px; 
-  position: sticky; 
-  top: 0; 
-  z-index: 100; 
-  display: flex; 
-  justify-content: space-between; 
+.header {
+  background: #0f172a;
+  color: white;
+  padding: 14px 16px 12px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  display: flex;
+  justify-content: space-between;
   align-items: center;
-  padding-top: max(12px, env(safe-area-inset-top));
 }
-.header h1 { margin: 0; font-size: 18px; line-height: 1.2; }
-.nav { 
-  position: fixed; 
-  bottom: 0; 
-  left: 0; 
-  right: 0; 
-  background: white; 
-  border-top: 1px solid #e2e8f0; 
-  display: flex; 
-  justify-content: space-around; 
-  padding: 8px 0; 
-  padding-bottom: max(8px, env(safe-area-inset-bottom));
-  z-index: 100; 
-  overflow-x: auto;
+.header-title { font-size: 17px; font-weight: 600; margin: 0; letter-spacing: -0.2px; }
+.header-sub { font-size: 12px; color: #94a3b8; margin-top: 1px; }
+.nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: #fff;
+  border-top: 1px solid #e2e8f0;
+  display: flex;
+  justify-content: space-around;
+  padding: 6px 0;
+  padding-bottom: max(6px, env(safe-area-inset-bottom));
+  z-index: 100;
 }
-.nav button { flex: 0 0 auto; background: none; border: none; padding: 6px 12px; font-size: 12px; color: #64748b; white-space: nowrap; }
+.nav button {
+  flex: 1;
+  background: none;
+  border: none;
+  padding: 6px 4px;
+  font-size: 10px;
+  color: #64748b;
+  font-weight: 500;
+}
 .nav button.active { color: #0f172a; font-weight: 600; }
 .view { display: none; padding: 16px; }
 .view.active { display: block; }
-.card { background: white; border-radius: 12px; padding: 16px; margin-bottom: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
-.card h3 { margin: 0 0 8px 0; font-size: 16px; }
+.card {
+  background: white;
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 12px;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.06);
+}
+.card h3 { margin: 0 0 8px 0; font-size: 16px; font-weight: 600; }
 .badge { display: inline-block; padding: 2px 8px; border-radius: 999px; font-size: 11px; font-weight: 600; }
 .badge-green { background: #dcfce7; color: #166534; }
 .badge-amber { background: #fef9c3; color: #854d0e; }
 .badge-red { background: #fee2e2; color: #991b1b; }
 .badge-blue { background: #dbeafe; color: #1e40af; }
-.badge-gray { background: #f3f4f6; color: #4b5563; }
 .action-item { display: flex; align-items: flex-start; gap: 10px; padding: 10px 0; border-bottom: 1px solid #f1f5f9; }
 .action-item:last-child { border-bottom: none; }
 .action-item input[type=checkbox] { width: 20px; height: 20px; margin-top: 2px; accent-color: #16a34a; }
 .action-item .text { flex: 1; }
 .action-item .meta { font-size: 12px; color: #64748b; margin-top: 2px; }
-.btn { background: #0f172a; color: white; border: none; padding: 10px 16px; border-radius: 8px; font-size: 14px; width: 100%; margin-top: 8px; }
-.btn-secondary { background: #e2e8f0; color: #0f172a; }
-input, textarea, select { width: 100%; padding: 10px; border: 1px solid #e2e8f0; border-radius: 8px; font-size: 16px; margin-bottom: 8px; }
+.btn { background: #0f172a; color: white; border: none; padding: 12px 16px; border-radius: 10px; font-size: 15px; width: 100%; margin-top: 8px; font-weight: 500; }
+.btn-secondary { background: #f1f5f9; color: #0f172a; }
+input, textarea, select { width: 100%; padding: 12px; border: 1px solid #e2e8f0; border-radius: 10px; font-size: 16px; margin-bottom: 8px; background: white; }
 .small { font-size: 13px; color: #64748b; }
 .stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-.stat { padding: 12px; border-radius: 8px; text-align: center; }
-.stat .num { font-size: 24px; font-weight: 700; }
+.stat { padding: 14px; border-radius: 10px; text-align: center; }
+.stat .num { font-size: 26px; font-weight: 700; }
 .dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 6px; }
-.dot-green { background: #22c55e; } .dot-amber { background: #eab308; } .dot-red { background: #ef4444; }
+.dot-red { background: #ef4444; }
+.dot-amber { background: #eab308; }
 </style>
 </head>
 <body>
 <div class="header">
   <div>
-    <h1>TEC MD OS</h1>
-    <div class="small" style="color:#94a3b8;" id="header-sub">Command Center</div>
+    <div class="header-title">Music Director</div>
+    <div class="header-sub" id="header-sub">Command Center</div>
   </div>
-  <button onclick="requestNotif()" style="background:#1e293b;color:white;border:none;padding:6px 10px;border-radius:6px;font-size:12px;">Notify</button>
+  <button onclick="requestNotif()" style="background:#1e293b;color:white;border:none;padding:7px 12px;border-radius:8px;font-size:13px;font-weight:500;">Notify</button>
 </div>
 
 <div id="home" class="view active">
@@ -104,7 +116,7 @@ input, textarea, select { width: 100%; padding: 10px; border: 1px solid #e2e8f0;
   <div class="card">
     <h3>Weekly Operating Rhythm</h3>
     <div class="small">Execute → Review → Plan → Teach → Prepare → Rehearse → Execute</div>
-    <div style="margin-top:12px;">
+    <div style="margin-top:12px;line-height:1.6;">
       <div><strong>Sunday</strong> — Execute and observe</div>
       <div><strong>Monday</strong> — Review, budget, Kingdom Contractors (6–9 PM)</div>
       <div><strong>Tuesday</strong> — 1-on-1 PS (4 PM), Carol (6 PM), Choir (8 PM)</div>
@@ -116,16 +128,18 @@ input, textarea, select { width: 100%; padding: 10px; border: 1px solid #e2e8f0;
   </div>
   <div class="card">
     <h3>Current Priorities</h3>
-    <div class="small">1. Consistency in Music Ministry</div>
-    <div class="small">2. FOH and livestream audio</div>
-    <div class="small">3. Online production and cameras</div>
-    <div class="small">4. Team development beyond songs</div>
-    <div class="small">5. Reliable staffing</div>
-    <div class="small">6. 2027 budget</div>
-    <div class="small">7. Carol 2026</div>
-    <div class="small">8. 21 Days of Glory 2027</div>
-    <div class="small">9. New facility transition</div>
-    <div class="small">10. PS alignment</div>
+    <div class="small" style="line-height:1.7;">
+      1. Consistency in Music Ministry<br>
+      2. FOH and livestream audio<br>
+      3. Online production and cameras<br>
+      4. Team development beyond songs<br>
+      5. Reliable staffing<br>
+      6. 2027 budget<br>
+      7. Carol 2026<br>
+      8. 21 Days of Glory 2027<br>
+      9. New facility transition<br>
+      10. PS alignment
+    </div>
   </div>
 </div>
 
@@ -179,9 +193,9 @@ input, textarea, select { width: 100%; padding: 10px; border: 1px solid #e2e8f0;
   <div id="sunday-list"></div>
   <div class="card">
     <h3>Recurring Issues</h3>
-    <div><span class="dot dot-red"></span> Livestream instrument balance</div>
-    <div><span class="dot dot-amber"></span> Lead vocal clarity</div>
-    <div><span class="dot dot-amber"></span> Camera following musical moment</div>
+    <div style="line-height:1.6;"><span class="dot dot-red"></span> Livestream instrument balance</div>
+    <div style="line-height:1.6;"><span class="dot dot-amber"></span> Lead vocal clarity</div>
+    <div style="line-height:1.6;"><span class="dot dot-amber"></span> Camera following musical moment</div>
   </div>
 </div>
 
@@ -193,11 +207,13 @@ input, textarea, select { width: 100%; padding: 10px; border: 1px solid #e2e8f0;
   </div>
   <div class="card">
     <h3>Department Assignments</h3>
-    <div class="small">Dance: Sis Tide (5 min teens)</div>
-    <div class="small">Children: Sis Abby (10 min)</div>
-    <div class="small">Teens: Sis Tomi</div>
-    <div class="small">Spoken Word: Sis Ola</div>
-    <div class="small">Protocol: Sis Ada</div>
+    <div class="small" style="line-height:1.6;">
+      Dance: Sis Tide (5 min teens)<br>
+      Children: Sis Abby (10 min)<br>
+      Teens: Sis Tomi<br>
+      Spoken Word: Sis Ola<br>
+      Protocol: Sis Ada
+    </div>
   </div>
   <div class="card">
     <h3>Pending</h3>
@@ -225,7 +241,7 @@ input, textarea, select { width: 100%; padding: 10px; border: 1px solid #e2e8f0;
   <div class="card">
     <h3>Curriculum Progress</h3>
     <div>Week 1: Pitch <span class="badge badge-green">Done</span></div>
-    <div>Week 2: Breath & Posture <span class="badge badge-blue">Current</span></div>
+    <div style="margin-top:4px;">Week 2: Breath & Posture <span class="badge badge-blue">Current</span></div>
     <div class="small" style="margin-top:8px;">Foundation → Intermediate → Advanced</div>
   </div>
 </div>
@@ -264,15 +280,15 @@ function showView(name) {
 function renderHome() {
   const today = new Date();
   const days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
-  document.getElementById('today-focus').innerHTML = `<div class="bold">${days[today.getDay()]}</div><div class="small">Protect the weekly rhythm. Execute → Review → Plan → Teach → Prepare → Rehearse → Execute</div>`;
+  document.getElementById('today-focus').innerHTML = `<div style="font-weight:600;">${days[today.getDay()]}</div><div class="small" style="margin-top:4px;">Protect the weekly rhythm. Execute → Review → Plan → Teach → Prepare → Rehearse → Execute</div>`;
   const open = data.actions.filter(a => !a.done).length;
   const overdue = data.actions.filter(a => !a.done && a.due && new Date(a.due) < today).length;
   document.getElementById('action-stats').innerHTML = `
     <div class="stat badge-red"><div class="num">${overdue}</div>Overdue</div>
     <div class="stat badge-amber"><div class="num">${open}</div>Open</div>`;
-  document.getElementById('next-meeting').innerHTML = `<div class="bold">Tuesday 8:00 PM — Choir Meeting</div><div class="small">Development: Basic breath support and posture</div>`;
+  document.getElementById('next-meeting').innerHTML = `<div style="font-weight:600;">Tuesday 8:00 PM — Choir Meeting</div><div class="small" style="margin-top:4px;">Development: Basic breath support and posture</div>`;
   const recent = data.meetings.slice(-3).reverse();
-  document.getElementById('recent-meetings').innerHTML = recent.length ? recent.map(m => `<div style="margin-bottom:8px;"><div class="bold">${m.title}</div><div class="small">${m.date} · ${m.type||''}</div></div>`).join('') : '<div class="small">No meetings logged yet</div>';
+  document.getElementById('recent-meetings').innerHTML = recent.length ? recent.map(m => `<div style="margin-bottom:8px;"><div style="font-weight:600;">${m.title}</div><div class="small">${m.date} · ${m.type||''}</div></div>`).join('') : '<div class="small">No meetings logged yet</div>';
 }
 
 function renderActions() {
@@ -317,7 +333,7 @@ function renderMeetings() {
   const recent = [...data.meetings].reverse();
   list.innerHTML = recent.map(m => `
     <div class="card">
-      <div class="bold">${m.title}</div>
+      <div style="font-weight:600;">${m.title}</div>
       <div class="small">${m.date} · ${m.type||''}</div>
       <div style="margin-top:8px;white-space:pre-wrap;">${m.notes}</div>
     </div>`).join('') || '<div class="card small">No meetings logged yet.</div>';
