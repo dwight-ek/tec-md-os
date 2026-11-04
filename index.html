@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#0f172a">
+<title>TEC MD OS</title>
+<style>
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+body { margin: 0; font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif; background: #f1f5f9; color: #0f172a; padding-bottom: 70px; }
+.header { background: #0f172a; color: white; padding: 16px; position: sticky; top: 0; z-index: 100; display: flex; justify-content: space-between; align-items: center; }
+.header h1 { margin: 0; font-size: 18px; }
+.nav { position: fixed; bottom: 0; left: 0; right: 0; background: white; border-top: 1px solid #e2e8f0; display: flex; justify-content: space-around; padding: 6px 0 env(safe-area-inset-bottom); z-index: 100; overflow-x: auto; }
+.nav button { flex: 0 0 auto; background: none; border: none; padding: 6px 10px; font-size: 11px; color: #64748b; white-space: nowrap; }
+.nav button.active { color: #0f172a; font-weight: 600; }
+.view { display: none; padding: 16px; }
+.view.active { display: block; }
+.card { background: white; border-radius: 12px; padding: 16px; margin-bottom: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
+.card h3 { margin: 0 0 8px 0; font-size: 16px; }
+.badge { display: inline-block; padding: 2px 8px; border-radius: 999px; font-size: 11px; font-weight: 600; }
+.badge-green { background: #dcfce7; color: #166534; }
+.badge-amber { background: #fef9c3; color: #854d0e; }
+.badge-red { background: #fee2e2; color: #991b1b; }
+.badge-blue { background: #dbeafe; color: #1e40af; }
+.badge-gray { background: #f3f4f6; color: #4b5563; }
+.action-item { display: flex; align-items: flex-start; gap: 10px; padding: 10px 0; border-bottom: 1px solid #f1f5f9; }
+.action-item:last-child { border-bottom: none; }
+.action-item input[type=checkbox] { width: 20px; height: 20px; margin-top: 2px; accent-color: #16a34a; }
+.action-item .text { flex: 1; }
+.action-item .meta { font-size: 12px; color: #64748b; margin-top: 2px; }
+.btn { background: #0f172a; color: white; border: none; padding: 10px 16px; border-radius: 8px; font-size: 14px; width: 100%; margin-top: 8px; }
+.btn-secondary { background: #e2e8f0; color: #0f172a; }
+input, textarea, select { width: 100%; padding: 10px; border: 1px solid #e2e8f0; border-radius: 8px; font-size: 16px; margin-bottom: 8px; }
+.small { font-size: 13px; color: #64748b; }
+.stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.stat { padding: 12px; border-radius: 8px; text-align: center; }
+.stat .num { font-size: 24px; font-weight: 700; }
+.dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 6px; }
+.dot-green { background: #22c55e; } .dot-amber { background: #eab308; } .dot-red { background: #ef4444; }
+</style>
+</head>
+<body>
+<div class="header">
+  <div>
+    <h1>TEC MD OS</h1>
+    <div class="small" style="color:#94a3b8;" id="header-sub">Command Center</div>
+  </div>
+  <button onclick="requestNotif()" style="background:#1e293b;color:white;border:none;padding:6px 10px;border-radius:6px;font-size:12px;">Notify</button>
+</div>
+
+<div id="home" class="view active">
+  <div class="card">
+    <h3>Today's Focus</h3>
+    <div id="today-focus"></div>
+  </div>
+  <div class="card">
+    <h3>Open Actions</h3>
+    <div class="stat-grid" id="action-stats"></div>
+  </div>
+  <div class="card">
+    <h3>Next Meeting</h3>
+    <div id="next-meeting"></div>
+  </div>
+  <div class="card">
+    <h3>Recent Meetings</h3>
+    <div id="recent-meetings"></div>
+  </div>
+</div>
+
+<div id="rhythm" class="view">
+  <div class="card">
+    <h3>Weekly Operating Rhythm</h3>
+    <div class="small">Execute → Review → Plan → Teach → Prepare → Rehearse → Execute</div>
+    <div style="margin-top:12px;">
+      <div><strong>Sunday</strong> — Execute and observe</div>
+      <div><strong>Monday</strong> — Review, budget, Kingdom Contractors (6–9 PM)</div>
+      <div><strong>Tuesday</strong> — 1-on-1 PS (4 PM), Carol (6 PM), Choir (8 PM)</div>
+      <div><strong>Wednesday</strong> — Distribute music and prep materials</div>
+      <div><strong>Thursday</strong> — Confirm readiness</div>
+      <div><strong>Friday</strong> — Rehearse and refine</div>
+      <div><strong>Saturday</strong> — Protect preparation</div>
+    </div>
+  </div>
+  <div class="card">
+    <h3>Current Priorities</h3>
+    <div class="small">1. Consistency in Music Ministry</div>
+    <div class="small">2. FOH and livestream audio</div>
+    <div class="small">3. Online production and cameras</div>
+    <div class="small">4. Team development beyond songs</div>
+    <div class="small">5. Reliable staffing</div>
+    <div class="small">6. 2027 budget</div>
+    <div class="small">7. Carol 2026</div>
+    <div class="small">8. 21 Days of Glory 2027</div>
+    <div class="small">9. New facility transition</div>
+    <div class="small">10. PS alignment</div>
+  </div>
+</div>
+
+<div id="actions" class="view">
+  <div class="card">
+    <h3>Add Action</h3>
+    <input type="text" id="new-action" placeholder="What needs to be done?">
+    <select id="new-owner">
+      <option value="Dwight">Dwight</option>
+      <option value="Team">Team</option>
+      <option value="PS">PS</option>
+      <option value="Other">Other</option>
+    </select>
+    <input type="date" id="new-due">
+    <select id="new-area">
+      <option value="General">General</option>
+      <option value="Sunday">Sunday</option>
+      <option value="Carol">Carol</option>
+      <option value="Sound">Sound</option>
+      <option value="Budget">Budget</option>
+    </select>
+    <button class="btn" onclick="addAction()">Add Action</button>
+  </div>
+  <div id="action-list"></div>
+</div>
+
+<div id="meetings" class="view">
+  <div class="card">
+    <h3>Log Meeting / Discussion</h3>
+    <input type="text" id="meet-title" placeholder="Meeting name">
+    <select id="meet-type">
+      <option value="Choir">Choir Meeting</option>
+      <option value="Carol">Carol Planning</option>
+      <option value="PS">1-on-1 with PS</option>
+      <option value="Budget">Budget</option>
+      <option value="Other">Other</option>
+    </select>
+    <textarea id="meet-notes" rows="4" placeholder="Key points, decisions, actions..."></textarea>
+    <button class="btn" onclick="addMeeting()">Save Meeting</button>
+  </div>
+  <div id="meeting-list"></div>
+</div>
+
+<div id="sunday" class="view">
+  <div class="card">
+    <h3>Sunday Review</h3>
+    <div class="small">Convert observations into actions</div>
+    <textarea id="sunday-notes" rows="3" placeholder="What happened last Sunday? Musical, sound, production, engagement..."></textarea>
+    <button class="btn" onclick="addSundayNote()">Log Review Note</button>
+  </div>
+  <div id="sunday-list"></div>
+  <div class="card">
+    <h3>Recurring Issues</h3>
+    <div><span class="dot dot-red"></span> Livestream instrument balance</div>
+    <div><span class="dot dot-amber"></span> Lead vocal clarity</div>
+    <div><span class="dot dot-amber"></span> Camera following musical moment</div>
+  </div>
+</div>
+
+<div id="carol" class="view">
+  <div class="card">
+    <h3>Carol 2026 — For Unto Us</h3>
+    <div class="small">Sunday 13 Dec 2026 · Two services · Isaiah 9:6</div>
+    <div style="margin-top:12px;" id="carol-checks"></div>
+  </div>
+  <div class="card">
+    <h3>Department Assignments</h3>
+    <div class="small">Dance: Sis Tide (5 min teens)</div>
+    <div class="small">Children: Sis Abby (10 min)</div>
+    <div class="small">Teens: Sis Tomi</div>
+    <div class="small">Spoken Word: Sis Ola</div>
+    <div class="small">Protocol: Sis Ada</div>
+  </div>
+  <div class="card">
+    <h3>Pending</h3>
+    <div id="carol-pending"></div>
+  </div>
+</div>
+
+<div id="approvals" class="view">
+  <div class="card">
+    <h3>Approvals & Decisions</h3>
+    <div class="small">Items needing pastoral or leadership sign-off</div>
+    <div style="margin-top:12px;" id="approval-list"></div>
+    <button class="btn btn-secondary" onclick="addApproval()">Add Decision Needed</button>
+  </div>
+</div>
+
+<div id="people" class="view">
+  <div class="card">
+    <h3>People Development</h3>
+    <div class="small">Track growth, assignments, and follow-ups</div>
+    <textarea id="people-note" rows="3" placeholder="Note on a team member, range, assignment, or development goal..."></textarea>
+    <button class="btn" onclick="addPeopleNote()">Add Note</button>
+  </div>
+  <div id="people-list"></div>
+  <div class="card">
+    <h3>Curriculum Progress</h3>
+    <div>Week 1: Pitch <span class="badge badge-green">Done</span></div>
+    <div>Week 2: Breath & Posture <span class="badge badge-blue">Current</span></div>
+    <div class="small" style="margin-top:8px;">Foundation → Intermediate → Advanced</div>
+  </div>
+</div>
+
+<div class="nav">
+  <button class="active" onclick="showView('home')">Home</button>
+  <button onclick="showView('rhythm')">Rhythm</button>
+  <button onclick="showView('actions')">Actions</button>
+  <button onclick="showView('meetings')">Meetings</button>
+  <button onclick="showView('sunday')">Sunday</button>
+  <button onclick="showView('carol')">Carol</button>
+  <button onclick="showView('approvals')">Approvals</button>
+  <button onclick="showView('people')">People</button>
+</div>
+
+<script>
+const STORAGE_KEY = 'tec-md-os-v2';
+let data = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{"actions":[],"meetings":[],"sunday":[],"people":[],"approvals":[],"checks":{}}');
+
+function save() { localStorage.setItem(STORAGE_KEY, JSON.stringify(data)); }
+
+function showView(name) {
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  document.querySelectorAll('.nav button').forEach(b => b.classList.remove('active'));
+  document.getElementById(name).classList.add('active');
+  event.target.classList.add('active');
+  if (name === 'home') renderHome();
+  if (name === 'actions') renderActions();
+  if (name === 'meetings') renderMeetings();
+  if (name === 'sunday') renderSunday();
+  if (name === 'carol') renderCarol();
+  if (name === 'approvals') renderApprovals();
+  if (name === 'people') renderPeople();
+}
+
+function renderHome() {
+  const today = new Date();
+  const days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+  document.getElementById('today-focus').innerHTML = `<div class="bold">${days[today.getDay()]}</div><div class="small">Protect the weekly rhythm. Execute → Review → Plan → Teach → Prepare → Rehearse → Execute</div>`;
+  const open = data.actions.filter(a => !a.done).length;
+  const overdue = data.actions.filter(a => !a.done && a.due && new Date(a.due) < today).length;
+  document.getElementById('action-stats').innerHTML = `
+    <div class="stat badge-red"><div class="num">${overdue}</div>Overdue</div>
+    <div class="stat badge-amber"><div class="num">${open}</div>Open</div>`;
+  document.getElementById('next-meeting').innerHTML = `<div class="bold">Tuesday 8:00 PM — Choir Meeting</div><div class="small">Development: Basic breath support and posture</div>`;
+  const recent = data.meetings.slice(-3).reverse();
+  document.getElementById('recent-meetings').innerHTML = recent.length ? recent.map(m => `<div style="margin-bottom:8px;"><div class="bold">${m.title}</div><div class="small">${m.date} · ${m.type||''}</div></div>`).join('') : '<div class="small">No meetings logged yet</div>';
+}
+
+function renderActions() {
+  const list = document.getElementById('action-list');
+  const sorted = [...data.actions].sort((a,b) => (a.done - b.done) || ((a.due||'9999') > (b.due||'9999') ? 1 : -1));
+  list.innerHTML = sorted.map((a) => `
+    <div class="card action-item">
+      <input type="checkbox" ${a.done?'checked':''} onchange="toggleAction(${data.actions.indexOf(a)})">
+      <div class="text">
+        <div style="${a.done?'text-decoration:line-through;color:#94a3b8;':''}">${a.text}</div>
+        <div class="meta">${a.owner} · ${a.area||'General'} · ${a.due || 'No due date'}</div>
+      </div>
+    </div>`).join('') || '<div class="card small">No actions yet. Add one above.</div>';
+}
+
+function addAction() {
+  const text = document.getElementById('new-action').value.trim();
+  if (!text) return;
+  data.actions.push({
+    text,
+    owner: document.getElementById('new-owner').value,
+    due: document.getElementById('new-due').value,
+    area: document.getElementById('new-area').value,
+    done: false,
+    created: new Date().toISOString()
+  });
+  document.getElementById('new-action').value = '';
+  document.getElementById('new-due').value = '';
+  save();
+  renderActions();
+  notify('New action added', text);
+}
+
+function toggleAction(i) {
+  data.actions[i].done = !data.actions[i].done;
+  save();
+  renderActions();
+}
+
+function renderMeetings() {
+  const list = document.getElementById('meeting-list');
+  const recent = [...data.meetings].reverse();
+  list.innerHTML = recent.map(m => `
+    <div class="card">
+      <div class="bold">${m.title}</div>
+      <div class="small">${m.date} · ${m.type||''}</div>
+      <div style="margin-top:8px;white-space:pre-wrap;">${m.notes}</div>
+    </div>`).join('') || '<div class="card small">No meetings logged yet.</div>';
+}
+
+function addMeeting() {
+  const title = document.getElementById('meet-title').value.trim();
+  const notes = document.getElementById('meet-notes').value.trim();
+  if (!title) return;
+  data.meetings.push({ 
+    title, 
+    notes, 
+    type: document.getElementById('meet-type').value,
+    date: new Date().toLocaleDateString() 
+  });
+  document.getElementById('meet-title').value = '';
+  document.getElementById('meet-notes').value = '';
+  save();
+  renderMeetings();
+  notify('Meeting logged', title);
+}
+
+function renderSunday() {
+  const list = document.getElementById('sunday-list');
+  const notes = [...data.sunday].reverse();
+  list.innerHTML = notes.map(n => `
+    <div class="card">
+      <div class="small">${n.date}</div>
+      <div style="margin-top:6px;white-space:pre-wrap;">${n.text}</div>
+    </div>`).join('') || '<div class="card small">No Sunday reviews logged yet.</div>';
+}
+
+function addSundayNote() {
+  const text = document.getElementById('sunday-notes').value.trim();
+  if (!text) return;
+  data.sunday.push({ text, date: new Date().toLocaleDateString() });
+  document.getElementById('sunday-notes').value = '';
+  save();
+  renderSunday();
+}
+
+function renderCarol() {
+  const checks = [
+    {key:'theme', label:'Theme locked: For Unto Us (Isaiah 9:6)'},
+    {key:'sm', label:'Social media form submitted & approved'},
+    {key:'depts', label:'Department leads assigned'},
+    {key:'film', label:'Film production direction agreed'},
+    {key:'schedule', label:'Pulpit schedule finalized'},
+    {key:'announcements', label:'Announcements started'}
+  ];
+  document.getElementById('carol-checks').innerHTML = checks.map(c => `
+    <div class="action-item">
+      <input type="checkbox" data-key="${c.key}" ${data.checks[c.key]?'checked':''} onchange="saveCheck(this)">
+      <div class="text">${c.label}</div>
+    </div>`).join('');
+  const pending = [
+    'Flier and montage from Ayodeji',
+    'Final program run of show',
+    'Scripts/lyrics package sent',
+    'Media room walkthrough'
+  ];
+  document.getElementById('carol-pending').innerHTML = pending.map(p => `<div class="small" style="margin:4px 0;">• ${p}</div>`).join('');
+}
+
+function saveCheck(el) {
+  data.checks[el.dataset.key] = el.checked;
+  save();
+}
+
+function renderApprovals() {
+  const list = document.getElementById('approval-list');
+  list.innerHTML = data.approvals.map((a, i) => `
+    <div class="action-item">
+      <input type="checkbox" ${a.done?'checked':''} onchange="toggleApproval(${i})">
+      <div class="text">
+        <div>${a.text}</div>
+        <div class="meta">${a.owner||'TBD'}</div>
+      </div>
+    </div>`).join('') || '<div class="small">No decisions pending</div>';
+}
+
+function addApproval() {
+  const text = prompt('Decision needed:');
+  if (!text) return;
+  data.approvals.push({ text, done: false, owner: 'PS' });
+  save();
+  renderApprovals();
+}
+
+function toggleApproval(i) {
+  data.approvals[i].done = !data.approvals[i].done;
+  save();
+  renderApprovals();
+}
+
+function renderPeople() {
+  const list = document.getElementById('people-list');
+  const notes = [...data.people].reverse();
+  list.innerHTML = notes.map(n => `
+    <div class="card">
+      <div class="small">${n.date}</div>
+      <div style="margin-top:6px;white-space:pre-wrap;">${n.text}</div>
+    </div>`).join('') || '<div class="card small">No people notes yet.</div>';
+}
+
+function addPeopleNote() {
+  const text = document.getElementById('people-note').value.trim();
+  if (!text) return;
+  data.people.push({ text, date: new Date().toLocaleDateString() });
+  document.getElementById('people-note').value = '';
+  save();
+  renderPeople();
+}
+
+function requestNotif() {
+  if ('Notification' in window && Notification.permission === 'default') {
+    Notification.requestPermission();
+  }
+}
+
+function notify(title, body) {
+  if ('Notification' in window && Notification.permission === 'granted') {
+    new Notification(title, { body });
+  }
+}
+
+document.getElementById('header-sub').textContent = new Date().toLocaleDateString('en-US', {weekday:'long', month:'short', day:'numeric'});
+renderHome();
+</script>
+</body>
+</html>
